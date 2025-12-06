@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskStatement Competitor Analysis - Expanded 2025</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Load Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+    <style>
+        /* Custom "Data Terminal" Theme Colors and Fonts */
+        :root {
+            --color-neon-primary: #00ffc4; /* Teal/Mint Green */
+            --color-neon-secondary: #ff00ff; /* Magenta */
+            --color-bg-dark: #0d1117; /* Deep Charcoal */
+            --color-bg-light: #ffffff; /* White */
+            --color-text-dark: #e2e8f0; /* Light Slate */
+            --color-text-faded: #94a3b8; /* Slate Gray */
+            --color-text-light: #1f2937; /* Dark Gray */
+            --current-bg: var(--color-bg-dark);
+            --current-text: var(--color-neon-primary);
+        }
+
+        /* Base Body Styling */
+        body {
+            font-family: 'Inter', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+            background-color: var(--current-bg);
+            color: var(--current-text);
+            overflow-x: hidden;
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        /* Dark Mode Specific Styles */
+        .dark {
+            --current-bg: var(--color-bg-dark);
+            --current-text: var(--color-neon-primary);
+        }
+        /* Light Mode Specific Styles (Inversion of some colors) */
+        .light {
+            --current-bg: var(--color-bg-light);
+            --current-text: #059669; /* Dark Teal */
+        }
+        .light .neon-border {
+             border: 1px solid #06b6d4; /* Cyan */
+             box-shadow: 0 0 3px rgba(6, 182, 212, 0.5);
+        }
+        .light .bg-gray-900\/50, .light .bg-gray-900\/70, .light .neon-card {
+            background-color: #f3f4f6; /* Light Gray */
+            color: var(--color-text-light);
+            border-left-color: #06b6d4; /* Cyan */
+        }
+        .light .text-white { color: var(--color-text-light); }
+        .light .text-neon-primary { color: #059669; }
+        .light .text-neon-secondary { color: #8b5cf6; /* Violet */ }
+        .light .border-neon-primary\/50 { border-color: #05966950; }
+        .light .border-neon-secondary\/50 { border-color: #8b5cf650; }
+
+
+        /* Utility for glowing effect */
+        .neon-glow {
+            box-shadow: 0 0 5px var(--color-neon-primary), 0 0 10px rgba(0, 255, 196, 0.3);
+            border-color: var(--color-neon-primary);
+        }
+
+        .neon-border {
+            border: 1px solid var(--current-text);
+            box-shadow: 0 0 3px rgba(0, 255, 196, 0.5);
+            transition: border-color 0.5s, box-shadow 0.5s;
+        }
+
+        .neon-card {
+            background-color: rgba(14, 18, 24, 0.6);
+            border-left: 2px solid var(--color-neon-secondary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .neon-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.2);
+        }
+
+        /* Specific styles for the expandable details */
+        .detail-view {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-top: 1px dashed var(--color-text-faded);
+            color: var(--color-text-faded);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+        .light .detail-view {
+            background-color: #e5e7eb;
+            color: var(--color-text-light);
+        }
+
+        .detail-view.active {
+            max-height: 800px; /* Increased for content */
+            opacity: 1;
+        }
+
+        /* Hide the actual table header on mobile view, where we use cards */
+        @media (max-width: 1023px) {
+            #competitor-table thead {
+                display: none;
+            }
+        }
+
+        /* Ensure the main grid layout works on desktop */
+        @media (min-width: 1024px) {
+            #main-layout {
+                grid-template-columns: 280px 1fr;
+            }
+            #filter-sidebar {
+                display: block !important; /* Always visible on desktop */
+            }
+        }
+
+        /* Custom scrollbar for game feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-neon-secondary);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen dark">
+
+    <!-- JSON DATA EMBED -->
+    <script>
+        const competitorsData = {
+"competitors": [
+{
+"name": "Stripe Sigma Assistant",
+"website": "https://stripe.com/sigma",
+"category": "Established",
+"funding": {
+"total": "$2.2B+ (Stripe overall; Sigma internal)",
+"rounds": [
+"Multiple rounds up to Series I (2023)"
+],
+"investors": ["Sequoia, Thrive Capital, Founders Fund"]
+},
+"socials": {
+"twitter": "@Stripe",
+"linkedin": "https://www.linkedin.com/company/stripe",
+"other": "Blog: stripe.com/blog"
+},
+"description": "AI-powered SQL and natural language query tool for analyzing Stripe payment data, focusing on revenue trends and custom reports.",
+"key_features": [
+"NLQ for MRR/ARR trends",
+"SQL generation",
+"Real-time payment insights",
+"Custom report builder"
+],
+"integrations": [
+"Native Stripe",
+"Google Sheets/Excel export",
+"Limited Xero/QuickBooks sync"
+],
+"pricing": "Free with Stripe account (usage-based API ~$0.01/query)",
+"target_audience": "Stripe-dependent SaaS startups ($1M-$50M ARR)",
+"threat_score": 4.5,
+"sources": [
+"https://stripe.com/sigma",
+"https://docs.stripe.com/stripe-data/how-sigma-works",
+"https://research.contrary.com/company/stripe"
+]
+},
+{
+"name": "Zenskar AI Agent",
+"website": "https://www.zenskar.com/",
+"category": "Emerging",
+"funding": {
+"total": "$10M+",
+"rounds": [
+"$3.5M Seed (2022)",
+"$6.5M Seed (2025)"
+],
+"investors": ["Bessemer Venture Partners"]
+},
+"socials": {
+"twitter": "@zenskarhq",
+"linkedin": "https://www.linkedin.com/company/zenskar",
+"other": "Blog: zenskar.com/blog"
+},
+"description": "AI-native order-to-cash platform automating billing, revenue recognition, and financial workflows for SaaS companies.",
+"key_features": [
+"Conversational queries for MRR/ARR/churn",
+"What-if scenario modeling",
+"Auto-insights on usage trends",
+"Revenue distribution automation"
+],
+"integrations": [
+"Stripe, Chargebee, Zuora",
+"Xero, QuickBooks",
+"Plaid for banks"
+],
+"pricing": "$99/mo (Pro); $499/mo (Enterprise)",
+"target_audience": "Mid-stage SaaS ($5M-$100M ARR) revenue ops",
+"threat_score": 4.0,
+"sources": [
+"https://www.zenskar.com/",
+"https://techcrunch.com/2022/10/03/saas-billing-platform-zenskar-funding-bessemer-ventures-partners/",
+"https://www.leadsontrees.com/news/new-york-based-zenskar-raises-65m-seed-round-to-revolutionize-ai-driven-revenue-automation"
+]
+},
+{
+"name": "Datarails FP&A Genius",
+"website": "https://www.datarails.com/",
+"category": "Established",
+"funding": {
+"total": "$50M+",
+"rounds": [
+"$50M Series B (2022)"
+],
+"investors": ["Qumra Capital, Vertex Ventures"]
+},
+"socials": {
+"twitter": "@Datarails",
+"linkedin": "https://www.linkedin.com/company/datarails",
+"other": "Blog: datarails.com/blog"
+},
+"description": "Excel-native FP&A platform with generative AI for natural language queries on budgets, forecasts, and variances.",
+"key_features": [
+"NLQ for ARR drops and forecasts",
+"Auto-charts and commentary",
+"Variance explanations",
+"Narrative insights generation"
+],
+"integrations": [
+"Excel/Google Sheets",
+"Xero, QuickBooks, Stripe",
+"HubSpot, bank feeds"
+],
+"pricing": "$300/user/mo (Team); Custom Enterprise",
+"target_audience": "SMB to mid-market finance teams",
+"threat_score": 3.8,
+"sources": [
+"https://www.datarails.com/solutions-fpna-genius/",
+"https://techcrunch.com/2022/03/10/datarails-50-million-excel/",
+"https://www.prnewswire.com/news-releases/datarails-announces-full-rollout-of-fpa-genius-the-chatgpt-for-the-cfos-office-301880753.html"
+]
+},
+{
+"name": "Vena Copilot",
+"website": "https://www.venasolutions.com/",
+"category": "Established",
+"funding": {
+"total": "Undisclosed (public company trajectory; $100M ARR)",
+"rounds": [
+"Multiple growth rounds pre-IPO"
+],
+"investors": ["Bain Capital Ventures, Forge Global"]
+},
+"socials": {
+"twitter": "@VenaSolutions",
+"linkedin": "https://www.linkedin.com/company/vena-solutions",
+"other": "Newsroom: venasolutions.com/newsroom"
+},
+"description": "AI copilot for FP&A within Vena's planning platform, enabling NLQ for forecasts and anomaly detection.",
+"key_features": [
+"NLQ for burn rates and variances",
+"AI agents for collaboration",
+"Scenario simulations",
+"Microsoft Teams integration"
+],
+"integrations": [
+"Excel, Xero, QuickBooks",
+"NetSuite, Stripe",
+"Multi-bank APIs"
+],
+"pricing": "$50/user/mo add-on (base $200/mo)",
+"target_audience": "Enterprise SaaS with FP&A needs",
+"threat_score": 3.5,
+"sources": [
+"https://www.venasolutions.com/product/copilot",
+"https://www.businesswire.com/news/home/20250515338488/en/Vena-Sets-New-Standard-in-Agentic-AI-for-FPA-With-Microsoft-Teams-Integration",
+"https://ncfacanada.org/vena-solutions-achieves-elite-centaur-status-100m-arr/"
+]
+},
+{
+"name": "Pigment AI",
+"website": "https://www.pigment.com/",
+"category": "Established",
+"funding": {
+"total": "$335M+",
+"rounds": [
+"$88M Series C (2023)",
+"$145M Series D (2024)"
+],
+"investors": ["ICONIQ Growth, Sandberg Bernthal Venture Partners"]
+},
+"socials": {
+"twitter": "@PigmentHQ",
+"linkedin": "https://www.linkedin.com/company/pigment",
+"other": "Blog: pigment.com/blog"
+},
+"description": "Collaborative business planning platform with AI for NLQ on trends and real-time simulations.",
+"key_features": [
+"NLQ for ARR impacts",
+"Auto-model building",
+"Multi-department views",
+"Role-based personalization"
+],
+"integrations": [
+"Salesforce, Xero, QuickBooks",
+"Stripe, HR/payroll tools"
+],
+"pricing": "$500/mo (Starter); $2K+/mo (Enterprise)",
+"target_audience": "Scaling SaaS ($10M+ ARR)",
+"threat_score": 3.2,
+"sources": [
+"https://www.pigment.com/blog/series-d-announcement",
+"https://techcrunch.com/2024/04/04/business-planning-startup-pigment-raises-145-million-round-in-rare-french-tech-megaround/",
+"https://www.prnewswire.com/news-releases/pigment-announces-145-million-series-d-led-by-iconiq-growth-302107856.html"
+]
+},
+{
+"name": "Intuit Assist",
+"website": "https://www.intuit.com/intuitassist/",
+"category": "Established",
+"funding": {
+"total": "Public company (NASDAQ: INTU; $14B+ market cap)",
+"rounds": "N/A",
+"investors": "N/A"
+},
+"socials": {
+"twitter": "@Intuit",
+"linkedin": "https://www.linkedin.com/company/intuit",
+"other": "QuickBooks: quickbooks.intuit.com"
+},
+"description": "Generative AI assistant for QuickBooks, handling NLQ on metrics, invoicing, and projections.",
+"key_features": [
+"NLQ for MRR and projections",
+"Transaction categorization",
+"Personalized recommendations",
+"Mobile chat interface"
+],
+"integrations": [
+"QuickBooks Online",
+"Stripe, PayPal, banks",
+"Xero import"
+],
+"pricing": "Included in QuickBooks ($30/mo Essentials)",
+"target_audience": "Small SMBs using QuickBooks",
+"threat_score": 3.7,
+"sources": [
+"https://quickbooks.intuit.com/ai-accounting/",
+"https://investors.intuit.com/news-events/press-releases/detail/1222/intuit-launches-ai-powered-intuit-assist-for-quickbooks-giving-millions-of-businesses-a-competitive-edge",
+"https://www.accountingtoday.com/list/tech-news-intuit-announces-intuit-assist-for-quickbooks"
+]
+},
+{
+"name": "Kore.ai",
+"website": "https://www.kore.ai/",
+"category": "Established",
+"funding": {
+"total": "$296M+",
+"rounds": [
+"$150M Growth (2024)"
+],
+"investors": ["FTV Capital, NVIDIA, Hercules Capital"]
+},
+"socials": {
+"twitter": "@Kore_ai",
+"linkedin": "https://www.linkedin.com/company/kore-ai",
+"other": "Blog: kore.ai/blog"
+},
+"description": "Enterprise conversational AI platform for finance ops, including NLQ for forecasting and transactions.",
+"key_features": [
+"NLQ for ARR forecasts",
+"Virtual assistants",
+"Multilingual support",
+"Compliance tools (GDPR/SOX)"
+],
+"integrations": [
+"QuickBooks, Xero, Stripe",
+"Salesforce, custom bank APIs"
+],
+"pricing": "$1.72/conversation; $10K+/yr Enterprise",
+"target_audience": "Large SaaS/fintech with customer-facing bots",
+"threat_score": 2.8,
+"sources": [
+"https://www.kore.ai/news/kore-ai-secures-150-million-strategic-growth-investment-to-drive-ai-powered-customer-and-employee-experiences-for-global-brands",
+"https://techcrunch.com/2024/01/30/kore-ai-a-startup-building-conversational-ai-for-enterprises-raises-150m/",
+"https://www.prnewswire.com/news-releases/koreai-secures-150-million-strategic-growth-investment-to-drive-ai-powered-customer-and-employee-experiences-for-global-brands-302047214.html"
+]
+},
+{
+"name": "Quanta",
+"website": "https://www.usequanta.com/",
+"category": "Emerging",
+"funding": {
+"total": "$19.7M",
+"rounds": [
+"$4.7M Seed (Feb 2025)",
+"$15M Series A (Dec 2025)"
+],
+"investors": ["Accel, Operator Collective"]
+},
+"socials": {
+"twitter": "@UseQuanta",
+"linkedin": "https://www.linkedin.com/company/usequanta",
+"other": "Blog: usequanta.com/blog"
+},
+"description": "AI-native ledger for continuous bookkeeping with NLQ via Prism for explainable metrics.",
+"key_features": [
+"NLQ for ARR impacts",
+"Real-time clarity",
+"Automated bookkeeping",
+"79% manual work reduction"
+],
+"integrations": [
+"Stripe, banks",
+"ERP systems"
+],
+"pricing": "Undisclosed (startup-focused)",
+"target_audience": "Startup finances ($1M-$20M ARR)",
+"threat_score": 4.2,
+"sources": [
+"https://www.usequanta.com/",
+"https://www.eznewswire.com/newsroom/quanta-prism-series-a-finance-ai",
+"https://www.finsmes.com/2025/12/quanta-raises-15m-in-series-a-funding.html",
+"https://siliconangle.com/2025/02/27/ai-native-accounting-startup-quanta-financial-raises-4-7m-automate-bookkeeping-real-time/"
+]
+},
+{
+"name": "Virat's AI Financial Agent",
+"website": "https://github.com/virattt/ai-financial-agent",
+"category": "Emerging",
+"funding": {
+"total": "$0 (Open-source)",
+"rounds": [],
+"investors": []
+},
+"socials": {
+"twitter": "@virattt",
+"linkedin": "https://www.linkedin.com/in/virat-singh-virattt/",
+"other": "GitHub: github.com/virattt"
+},
+"description": "Open-source AI agent for investment research and financial statement analysis using LLMs.",
+"key_features": [
+"Access to income/balance/cash flow statements",
+"LLM-decided visualizations",
+"No-signup demo",
+"Hedge fund simulation"
+],
+"integrations": [
+"Open APIs for financial data",
+"LangChain for agents"
+],
+"pricing": "Free (open-source)",
+"target_audience": "Indie devs and solo SaaS founders",
+"threat_score": 2.5,
+"sources": [
+"https://github.com/virattt/ai-financial-agent",
+"https://x.com/virattt/status/1875684096749539432",
+"https://www.linkedin.com/posts/emollick_this-is-neat-im-playing-with-virat-singhs-activity-7283565091642343425-p5-U"
+]
+},
+{
+"name": "Causal",
+"website": "https://causal.app/",
+"category": "Emerging",
+"funding": {
+"total": "$15M+",
+"rounds": [
+"$4M Seed (2021)",
+"$11M Series A (2023)"
+],
+"investors": ["Index Ventures, LocalGlobe"]
+},
+"socials": {
+"twitter": "@usecausal",
+"linkedin": "https://www.linkedin.com/company/causal-app",
+"other": "Blog: causal.app/blog"
+},
+"description": "AI-powered financial modeling tool replacing Excel for scenario planning and metrics tracking.",
+"key_features": [
+"NLQ for forecasts",
+"Automated scenario building",
+"Real-time collaboration",
+"No-code modeling"
+],
+"integrations": [
+"Stripe, QuickBooks",
+"Google Sheets"
+],
+"pricing": "$25/user/mo (Starter)",
+"target_audience": "SaaS teams for modeling",
+"threat_score": 3.0,
+"sources": [
+"https://causal.app/",
+"https://www.crunchbase.com/organization/causal-app",
+"https://x.com/amitcoder1/status/1995792664650813509"
+]
+},
+{
+"name": "Cube",
+"website": "https://www.cubesoftware.com/",
+"category": "Established",
+"funding": {
+"total": "$65.3M+",
+"rounds": [
+"$20M Series B (Mar 2024)",
+"Series C (2025)"
+],
+"investors": ["Battery Ventures, GTMFund, Mayfield"]
+},
+"socials": {
+"twitter": "@cubesoftware",
+"linkedin": "https://www.linkedin.com/company/cubesoftware",
+"other": "Blog: cubesoftware.com/blog"
+},
+"description": "Spreadsheet-native FP&A platform with AI agents for automating forecasts, variance analysis, and NLQ in Excel/Sheets.",
+"key_features": [
+"Conversational Agent for NLQ",
+"Forecasting Agent for scenarios",
+"Analysis Agent for variances",
+"Mapping Agent for rules"
+],
+"integrations": [
+"Excel/Google Sheets",
+"ERPs (NetSuite, QuickBooks), CRMs (Salesforce), HRIS"
+],
+"pricing": "Custom; starting ~$2,000/mo",
+"target_audience": "Lean finance teams in SMB to mid-market SaaS",
+"threat_score": 4.0,
+"sources": [
+"https://www.cubesoftware.com/",
+"https://www.crunchbase.com/organization/cubesoftware",
+"https://pitchbook.com/profiles/company/375610-78",
+"https://www.cfodive.com/news/cube-taps-workday-alum-drive-tech-finance-synergy-20m-funding/710751/"
+]
+},
+{
+"name": "Planful",
+"website": "https://planful.com/",
+"category": "Established",
+"funding": {
+"total": "$71.6M (pre-acquisition)",
+"rounds": [
+"Acquired by Vector Capital (2018)"
+],
+"investors": ["Vector Capital"]
+},
+"socials": {
+"twitter": "@Planful",
+"linkedin": "https://www.linkedin.com/company/planful",
+"other": "Blog: planful.com/blog"
+},
+"description": "Cloud-based FP&A platform with Planful Predict AI for anomaly detection, forecasting, and NLQ insights.",
+"key_features": [
+"NLQ for variances and projections",
+"Anomaly detection (Signals)",
+"ML-assisted forecasting",
+"Automated commentary"
+],
+"integrations": [
+"ERPs (NetSuite, SAP), CRMs",
+"Multi-entity consolidation"
+],
+"pricing": "Custom (mid-market enterprise)",
+"target_audience": "Mid-market to enterprise organizations",
+"threat_score": 3.9,
+"sources": [
+"https://planful.com/",
+"https://www.crunchbase.com/organization/planful",
+"https://tracxn.com/d/companies/planful/__pe6-7-0v-1xSUTEFrKoklayX4Sqi-1Rcedro8AOZ-k4",
+"https://pitchbook.com/profiles/company/13284-73"
+]
+},
+{
+"name": "Anaplan",
+"website": "https://www.anaplan.com/",
+"category": "Established",
+"funding": {
+"total": "$296M+ (pre-acquisition)",
+"rounds": [
+"Acquired by Thoma Bravo ($10.7B, 2022)"
+],
+"investors": ["Thoma Bravo"]
+},
+"socials": {
+"twitter": "@Anaplan",
+"linkedin": "https://www.linkedin.com/company/anaplan",
+"other": "News: anaplan.com/news"
+},
+"description": "Connected planning platform with PlanIQ ML forecasting and CoPlanner for conversational NLQ and scenarios.",
+"key_features": [
+"NLQ via CoPlanner",
+"ML time-series forecasting",
+"Anomaly detection",
+"Optimizer for scenarios"
+],
+"integrations": [
+"Salesforce, ERPs, HR systems",
+"Amazon Forecast"
+],
+"pricing": "Custom (enterprise tiers)",
+"target_audience": "Large enterprises with complex planning",
+"threat_score": 3.5,
+"sources": [
+"https://www.anaplan.com/",
+"https://www.crunchbase.com/organization/anaplan",
+"https://pitchbook.com/profiles/company/53664-49",
+"https://tracxn.com/d/companies/anaplan/__APmOXHsS4ltYYE3C37y9KCmcAO2R-Di_omOTaAQpiV4"
+]
+},
+{
+"name": "Abacum",
+"website": "https://www.abacum.ai/",
+"category": "Emerging",
+"funding": {
+"total": "$92.17M+",
+"rounds": [
+"$60M Series B (Jun 2025)"
+],
+"investors": ["Scale Venture Partners, Cathay Innovation, Y Combinator"]
+},
+"socials": {
+"twitter": "@abacum",
+"linkedin": "https://www.linkedin.com/company/abacum",
+"other": "Blog: abacum.ai/blog"
+},
+"description": "AI-native FP&A platform for mid-market with automated commentary, anomaly detection, and NLQ on KPIs.",
+"key_features": [
+"NLQ for revenue/expense changes",
+"Variance explanations",
+"Narrative generation",
+"Scenario modeling"
+],
+"integrations": [
+"700+ including ERPs, CRMs, billing, HRIS"
+],
+"pricing": "Custom",
+"target_audience": "High-growth mid-market SaaS/tech",
+"threat_score": 4.1,
+"sources": [
+"https://www.abacum.ai/",
+"https://www.crunchbase.com/organization/abacum",
+"https://www.abacum.ai/newsroom/series-b-announcement",
+"https://pitchbook.com/profiles/company/442509-31"
+]
+},
+{
+"name": "Aleph",
+"website": "https://www.getaleph.com/",
+"category": "Emerging",
+"funding": {
+"total": "$46M+",
+"rounds": [
+"$29M Series B (Sep 2025)"
+],
+"investors": ["Khosla Ventures, Bain Capital Ventures, Y Combinator"]
+},
+"socials": {
+"twitter": "@getaleph",
+"linkedin": "https://www.linkedin.com/company/getaleph",
+"other": "Blog: getaleph.com/blog"
+},
+"description": "AI-native FP&A enhancing spreadsheets with NLQ, automation, and real-time data access for metrics.",
+"key_features": [
+"NLQ variance analysis",
+"Automated reporting",
+"No-code dashboards",
+"Bi-directional spreadsheet sync"
+],
+"integrations": [
+"150+ ERPs, HRIS, CRMs",
+"Excel/Google Sheets"
+],
+"pricing": "Custom",
+"target_audience": "Finance teams in growing SaaS ($5M-$50M ARR)",
+"threat_score": 4.3,
+"sources": [
+"https://www.getaleph.com/",
+"https://www.crunchbase.com/organization/aleph-labs",
+"https://www.finsmes.com/2025/09/aleph-raises-29m-in-series-b-funding.html",
+"https://pitchbook.com/profiles/company/466768-72"
+]
+},
+{
+"name": "Drivetrain",
+"website": "https://www.drivetrain.ai/",
+"category": "Emerging",
+"funding": {
+"total": "$15M+",
+"rounds": [
+"$15M Series A (Oct 2022)"
+],
+"investors": ["Elevation Capital, Venture Highway"]
+},
+"socials": {
+"twitter": "@drivetrain_ai",
+"linkedin": "https://www.linkedin.com/company/drivetrain-ai",
+"other": "Blog: drivetrain.ai/blog"
+},
+"description": "AI-native business planning platform with conversational AI Analyst for insights, anomalies, and SaaS metrics.",
+"key_features": [
+"NLQ data transformation",
+"Anomaly detection",
+"Automated model generation",
+"Real-time tracking"
+],
+"integrations": [
+"800+ including Salesforce, NetSuite, QuickBooks"
+],
+"pricing": "Custom ($$ tiers)",
+"target_audience": "Scaling SaaS companies",
+"threat_score": 4.0,
+"sources": [
+"https://www.drivetrain.ai/",
+"https://www.crunchbase.com/organization/drivetrain",
+"https://pitchbook.com/profiles/company/490293-91",
+"https://tracxn.com/d/companies/drivetrain/__KPtRI_faRFXam9yH7-SeaDxDyNKDcswANTOW6rQC9yQ"
+]
+},
+{
+"name": "Runway",
+"website": "https://runway.com/",
+"category": "Established",
+"funding": {
+"total": "$32.5M+",
+"rounds": [
+"Multiple VC rounds"
+],
+"investors": ["Crosscourt Ventures, 75 & Sunny"]
+},
+"socials": {
+"twitter": "@runway",
+"linkedin": "https://www.linkedin.com/company/runway",
+"other": "Blog: runway.com/blog"
+},
+"description": "Financial modeling platform with Runway Copilot for NLQ, scenario planning, and top-line forecasts.",
+"key_features": [
+"NLQ for simulations",
+"Proactive insights",
+"Multi-scenario drafts",
+"Interactive dashboards"
+],
+"integrations": [
+"750+ including QuickBooks, NetSuite, CRMs, HRIS"
+],
+"pricing": "Custom",
+"target_audience": "SaaS teams for revenue forecasting",
+"threat_score": 3.5,
+"sources": [
+"https://runway.com/",
+"https://www.crunchbase.com/organization/runway-financial",
+"https://pitchbook.com/profiles/company/437187-52",
+"https://www.linkedin.com/company/runway"
+]
+}
+],
+"market_overview": {
+"total_market_size": "$2.5B (AI FP&A tools, 2025)",
+"growth_rate": "35% YoY",
+"key_trends": [
+"NLQ accuracy 85-95%",
+"80% integrate with Stripe",
+"Shift to agentic AI by 2027",
+"Spreadsheet-native tools rising (e.g., Cube, Aleph)"
+]
+}
+};
+    </script>
+    <!-- END JSON DATA EMBED -->
+
+    <div class="p-4 lg:p-8">
+        <!-- HEADER / COMMAND PROMPT -->
+        <header class="mb-6 pb-4 border-b-2 border-neon-primary/50 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl lg:text-5xl font-extrabold tracking-widest uppercase text-neon-primary">
+                    AskStatement
+                </h1>
+                <h2 class="text-xl lg:text-2xl font-bold text-neon-secondary mb-1">
+                    Competitor Analysis - Expanded 2025
+                </h2>
+                <div class="text-sm text-gray-500 flex justify-between">
+                    <span class="text-gray-400">AI Financial Chatbot Competitor Landscape Review</span>
+                </div>
+            </div>
+            <!-- Dark/Light Mode Toggle -->
+            <button id="mode-toggle" class="p-2 rounded-full border border-current hover:bg-neon-primary/20 transition duration-300">
+                <span data-lucide="sun-moon" class="w-6 h-6 text-current"></span>
+            </button>
+        </header>
+
+        <!-- MOBILE FILTER TOGGLE BUTTON -->
+        <button id="sidebar-toggle" class="lg:hidden w-full px-4 py-2 mb-4 rounded-lg bg-neon-secondary/20 hover:bg-neon-secondary/40 text-white flex items-center justify-center transition duration-300">
+            <span data-lucide="filter" class="w-5 h-5 mr-2"></span>
+            Filter Data Stream
+        </button>
+
+        <!-- MAIN LAYOUT: SIDEBAR + CONTENT -->
+        <main id="main-layout" class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+
+            <!-- SIDEBAR: FILTERS -->
+            <aside id="filter-sidebar" class="hidden lg:block p-4 rounded-lg neon-border h-fit bg-gray-900/50">
+                <h3 class="text-lg font-bold mb-4 uppercase tracking-wider text-current">:: Data Filters</h3>
+
+                <!-- Name Search Bar -->
+                <div class="mb-6">
+                    <p class="text-sm font-semibold mb-2 text-neon-primary">Search Competitor</p>
+                    <input type="text" id="name-search" placeholder="Enter name..."
+                           class="w-full p-2 rounded-md bg-gray-700 border border-neon-primary/50 text-white focus:ring-neon-primary focus:border-neon-primary placeholder-gray-500">
+                </div>
+
+                <!-- Threat Score Filter -->
+                <div class="mb-6">
+                    <p class="text-sm font-semibold mb-2 text-neon-primary">Threat Level (Score)</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm text-gray-300 hover:text-white transition duration-200">
+                            <input type="checkbox" name="threat_filter" value="High" class="mr-2 accent-red-500" checked>
+                            High Threat (>4.0)
+                        </label>
+                        <label class="flex items-center text-sm text-gray-300 hover:text-white transition duration-200">
+                            <input type="checkbox" name="threat_filter" value="Medium" class="mr-2 accent-yellow-500" checked>
+                            Medium Threat (3.0 - 4.0)
+                        </label>
+                        <label class="flex items-center text-sm text-gray-300 hover:text-white transition duration-200">
+                            <input type="checkbox" name="threat_filter" value="Low" class="mr-2 accent-green-500" checked>
+                            Low Threat (<3.0)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Category Filter -->
+                <div class="mb-6">
+                    <p class="text-sm font-semibold mb-2 text-neon-primary">Market Status</p>
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm text-gray-300 hover:text-white transition duration-200">
+                            <input type="checkbox" name="category_filter" value="Established" class="mr-2 accent-purple-500" checked>
+                            Established
+                        </label>
+                        <label class="flex items-center text-sm text-gray-300 hover:text-white transition duration-200">
+                            <input type="checkbox" name="category_filter" value="Emerging" class="mr-2 accent-blue-500" checked>
+                            Emerging
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="applyFilters()" class="w-full mt-4 py-2 rounded-lg bg-neon-primary/10 text-neon-primary border border-neon-primary hover:bg-neon-primary/30 transition duration-300 font-bold text-sm">
+                    Apply Filter Set
+                </button>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <section>
+                <!-- MARKET OVERVIEW -->
+                <h3 class="text-xl font-bold uppercase tracking-wider mb-4 text-current border-b border-gray-700 pb-2">:: Market Scan Summary</h3>
+
+                <!-- Market Cards -->
+                <div id="market-overview-cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <!-- Detailed Trends & Threat Distribution Chart -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div id="detailed-trends-container" class="p-4 rounded-lg neon-border bg-gray-900/70">
+                        <h4 class="text-sm uppercase tracking-wider text-neon-secondary mb-2">Detailed Trends</h4>
+                        <ul id="detailed-trends-list" class="list-disc list-inside space-y-1 pl-2 text-gray-400"></ul>
+                    </div>
+                    <div class="p-4 rounded-lg neon-border bg-gray-900/70">
+                        <h4 class="text-sm uppercase tracking-wider text-neon-secondary mb-2">Threat Distribution</h4>
+                        <canvas id="threat-chart" class="max-h-64"></canvas>
+                    </div>
+                </div>
+
+                <!-- COMPETITOR DATA STREAM -->
+                <h3 class="text-xl font-bold uppercase tracking-wider mb-4 text-current border-b border-gray-700 pb-2">:: Competitor Data Stream</h3>
+
+                <!-- Sort Control -->
+                <div class="flex justify-end items-center mb-4 text-sm text-gray-400">
+                    <label for="sort-by" class="mr-2">Sort by:</label>
+                    <select id="sort-by" onchange="applyFilters()" class="p-1 rounded-md bg-gray-700 border border-neon-secondary/50 text-white focus:ring-neon-secondary focus:border-neon-secondary">
+                        <option value="threat_score_desc">Threat Score (High to Low)</option>
+                        <option value="threat_score_asc">Threat Score (Low to High)</option>
+                        <option value="name_asc">Name (A-Z)</option>
+                    </select>
+                </div>
+
+
+                <!-- TABLE/CARD CONTAINER -->
+                <div id="competitor-list-container" class="lg:bg-gray-900/50 lg:p-4 lg:rounded-lg lg:neon-border">
+                    <table id="competitor-table" class="min-w-full hidden lg:table text-sm text-gray-300">
+                        <!-- Desktop Table Header - Increased to text-sm for better desktop readability -->
+                        <thead>
+                            <tr class="uppercase text-sm text-neon-primary/70 border-b border-neon-primary/50">
+                                <th class="p-3 text-left">Entity Name</th>
+                                <th class="p-3 text-left">Category</th>
+                                <th class="p-3 text-left">Funding</th>
+                                <th class="p-3 text-left">Key Features (Top 2)</th>
+                                <th class="p-3 text-center">Integrations</th>
+                                <th class="p-3 text-left">Pricing</th>
+                                <th class="p-3 text-center">Threat Score</th>
+                            </tr>
+                        </thead>
+                        <!-- Desktop Table Body - populated by JS -->
+                        <tbody id="competitor-table-body"></tbody>
+                    </table>
+
+                    <!-- Mobile/Tablet Card View - populated by JS -->
+                    <div id="competitor-card-view" class="grid grid-cols-1 gap-4 lg:hidden">
+                        <!-- Cards will be injected here -->
+                    </div>
+                </div>
+
+            </section>
+        </main>
+
+        <!-- FOOTER / LOG -->
+        <footer class="mt-12 pt-4 border-t-2 border-neon-secondary/50 text-center text-xs text-gray-500">
+            <!-- Removed dynamic competitor count as requested -->
+            <p id="footer-text">Updated Dec 2025 | JSON Source Below</p>
+            <button onclick="toggleJsonView()" class="mt-2 text-neon-secondary hover:underline font-bold text-xs">
+                View Raw JSON Data
+            </button>
+            <div id="raw-json-viewer" class="detail-view max-h-[400px] overflow-y-auto mt-2 text-left p-4 rounded-lg bg-gray-800/80">
+                <pre class="text-xs whitespace-pre-wrap break-all text-gray-400" id="raw-json-content"></pre>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let competitors = competitorsData.competitors;
+        let chartInstance = null;
+        const totalCompetitors = competitors.length;
+
+        // --- UTILITY FUNCTIONS ---
+
+        // Function to determine Threat Score color (UPDATED BOUNDARIES)
+        function getThreatColor(score) {
+            if (score > 4.0) return 'text-red-500'; // High Threat
+            if (score >= 3.0 && score <= 4.0) return 'text-yellow-500'; // Medium Threat
+            return 'text-green-500'; // Low Threat
+        }
+
+        // Function to get Threat Level (UPDATED BOUNDARIES)
+        function getThreatLevel(score) {
+            if (score > 4.0) return 'High';
+            if (score >= 3.0 && score <= 4.0) return 'Medium';
+            return 'Low';
+        }
+
+        // Function to generate Star Rating HTML
+        function getStarRating(score) {
+            const fullStars = Math.floor(score);
+            const halfStar = score % 1 >= 0.25 && score % 1 <= 0.75;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            let stars = '';
+
+            for (let i = 0; i < fullStars; i++) {
+                stars += `<span class="text-yellow-400" data-lucide="star" style="width:14px; height:14px; fill:currentColor; stroke-width:1.5;"></span>`;
+            }
+            if (halfStar) {
+                stars += `<span class="text-yellow-400" data-lucide="star-half" style="width:14px; height:14px; fill:currentColor; stroke-width:1.5;"></span>`;
+            }
+            for (let i = 0; i < emptyStars; i++) {
+                stars += `<span class="text-gray-600" data-lucide="star" style="width:14px; height:14px; stroke-width:1.5;"></span>`;
+            }
+            return `<div class="flex items-center space-x-0.5">${stars}</div>`;
+        }
+
+        // Function to classify category based on JSON field
+        function getCategory(competitor) {
+            const name = competitor.category;
+            const class_ = name === 'Established' ? 'text-purple-400 border-purple-400' : 'text-blue-400 border-blue-400';
+            return { name: name, class: class_ };
+        }
+
+        // --- CORE RENDERING FUNCTIONS ---
+
+        function renderCompetitors(data) {
+            const tableBody = document.getElementById('competitor-table-body');
+            const cardView = document.getElementById('competitor-card-view');
+            tableBody.innerHTML = '';
+            cardView.innerHTML = '';
+
+            data.forEach((comp, index) => {
+                const threatColorClass = getThreatColor(comp.threat_score);
+                const starRatingHtml = getStarRating(comp.threat_score);
+                const category = getCategory(comp);
+                const integrationCount = comp.integrations ? comp.integrations.length : 0;
+                const uniqueIndex = `${comp.name.replace(/\s/g, '-')}-${index}`; // Unique ID for details
+
+                const truncatedFeatures = comp.key_features.slice(0, 2).join(', ') + (comp.key_features.length > 2 ? '...' : '');
+
+                // 1. Desktop Table Row
+                const tableRow = document.createElement('tr');
+                tableRow.id = `comp-row-${uniqueIndex}`;
+                tableRow.className = `border-b border-gray-800/50 cursor-pointer hover:bg-gray-800/80 transition duration-150`;
+                tableRow.onclick = () => toggleDetails(uniqueIndex);
+
+                tableRow.innerHTML = `
+                    <td class="p-3 font-semibold text-white">
+                        <a href="${comp.website}" target="_blank" class="hover:text-neon-secondary transition duration-150">${comp.name}</a>
+                    </td>
+                    <td class="p-3">
+                        <div class="text-xs ${category.class} border rounded-full px-2 py-0.5 inline-block">${category.name}</div>
+                    </td>
+                    <td class="p-3 text-neon-secondary">${comp.funding.total.split('(')[0].trim()}</td>
+                    <td class="p-3 text-xs text-gray-400">${truncatedFeatures}</td>
+                    <td class="p-3 text-center">
+                        <span class="text-xs font-bold text-white bg-blue-500/80 px-2 py-0.5 rounded-full">${integrationCount}</span>
+                    </td>
+                    <td class="p-3">${comp.pricing}</td>
+                    <td class="p-3 text-center">
+                        <div class="flex flex-col items-center">
+                            <span class="text-lg font-bold ${threatColorClass}">${comp.threat_score}</span>
+                            ${starRatingHtml}
+                        </div>
+                    </td>
+                `;
+
+                // Add the expandable detail view (for desktop)
+                const detailRow = document.createElement('tr');
+                detailRow.innerHTML = `
+                    <td colspan="7" class="p-0">
+                        <div id="details-desktop-${uniqueIndex}" class="detail-view">
+                            <p class="mb-2"><strong class="text-neon-secondary">Description:</strong> ${comp.description}</p>
+                            <p class="mb-2"><strong class="text-neon-secondary">Key Features:</strong> ${comp.key_features.join(', ')}</p>
+                            <p class="mb-2"><strong class="text-neon-secondary">Integrations:</strong> ${comp.integrations.join(', ')}</p>
+                            <div class="flex items-center space-x-4 mt-3">
+                                <a href="${comp.website}" target="_blank" class="text-blue-400 hover:text-blue-300 flex items-center"><span data-lucide="globe" class="w-4 h-4 mr-1"></span> Website</a>
+                                ${comp.socials.twitter ? `<a href="https://twitter.com/${comp.socials.twitter.replace('@', '')}" target="_blank" class="text-blue-400 hover:text-blue-300 flex items-center"><span data-lucide="twitter" class="w-4 h-4 mr-1"></span> Twitter</a>` : ''}
+                                ${comp.socials.linkedin ? `<a href="${comp.socials.linkedin}" target="_blank" class="text-blue-400 hover:text-blue-300 flex items-center"><span data-lucide="linkedin" class="w-4 h-4 mr-1"></span> LinkedIn</a>` : ''}
+                            </div>
+                            <p class="mt-3 text-xs"><strong class="text-neon-primary">Sources:</strong> ${comp.sources.map(s => `<a href="${s}" target="_blank" class="underline text-gray-500 hover:text-gray-400">${new URL(s).hostname}</a>`).join(', ')}</p>
+                        </div>
+                    </td>
+                `;
+
+                tableBody.appendChild(tableRow);
+                tableBody.appendChild(detailRow);
+
+                // 2. Mobile Card View
+                const mobileCard = document.createElement('div');
+                mobileCard.className = 'neon-card p-4 rounded-lg shadow-md';
+                mobileCard.onclick = () => toggleDetails(uniqueIndex);
+                mobileCard.innerHTML = `
+                    <header class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="text-lg font-bold text-white">${comp.name}</h4>
+                            <div class="text-xs ${category.class} border rounded-full px-2 py-0.5 mt-1 inline-block">${category.name}</div>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-xl font-extrabold ${threatColorClass}">${comp.threat_score}</span>
+                            ${starRatingHtml}
+                        </div>
+                    </header>
+                    <div class="text-sm text-gray-400 space-y-2">
+                        <p><strong>Funding:</strong> <span class="text-neon-secondary">${comp.funding.total.split('(')[0].trim()}</span></p>
+                        <p><strong>Target:</strong> ${comp.target_audience}</p>
+                        <p><strong>Pricing:</strong> ${comp.pricing}</p>
+                        <p><strong>Features:</strong> ${truncatedFeatures}</p>
+                        <p><strong>Integrations:</strong> <span class="text-xs font-bold text-white bg-blue-500/80 px-2 py-0.5 rounded-full">${integrationCount}</span> tools connected</p>
+                    </div>
+                    <div id="details-mobile-${uniqueIndex}" class="detail-view">
+                        <p class="mb-2"><strong class="text-neon-secondary">Description:</strong> ${comp.description}</p>
+                        <p class="mb-2"><strong class="text-neon-secondary">All Features:</strong> ${comp.key_features.join(', ')}</p>
+                        <p class="mb-2"><strong class="text-neon-secondary">Integrations:</strong> ${comp.integrations.join(', ')}</p>
+                        <div class="flex flex-wrap gap-x-4 mt-3">
+                            <a href="${comp.website}" target="_blank" class="text-blue-400 hover:text-blue-300 flex items-center"><span data-lucide="globe" class="w-4 h-4 mr-1"></span> Site</a>
+                            ${comp.socials.twitter ? `<a href="https://twitter.com/${comp.socials.twitter.replace('@', '')}" target="_blank" class="text-blue-400 hover:text-blue-300 flex items-center"><span data-lucide="twitter" class="w-4 h-4 mr-1"></span> Twitter</a>` : ''}
+                            ${comp.socials.linkedin ? `<a href="${comp.socials.linkedin}" target="_blank" class="text-blue-400 hover:text-blue-300 flex items-center"><span data-lucide="linkedin" class="w-4 h-4 mr-1"></span> LinkedIn</a>` : ''}
+                        </div>
+                        <p class="mt-3 text-xs"><strong class="text-neon-primary">Sources:</strong> ${comp.sources.length} links available.</p>
+                    </div>
+                `;
+                cardView.appendChild(mobileCard);
+            });
+            // Re-run Lucide Icons to render new icons
+            lucide.createIcons();
+        }
+
+        // Function to toggle the expanded details
+        function toggleDetails(uniqueIndex) {
+            const desktopDetails = document.getElementById(`details-desktop-${uniqueIndex}`);
+            const mobileDetails = document.getElementById(`details-mobile-${uniqueIndex}`);
+
+            // Close all others
+            document.querySelectorAll('.detail-view.active').forEach(view => {
+                if (view !== desktopDetails && view !== mobileDetails) {
+                    view.classList.remove('active');
+                }
+            });
+
+            if (desktopDetails) desktopDetails.classList.toggle('active');
+            if (mobileDetails) mobileDetails.classList.toggle('active');
+        }
+
+        // --- FILTERING AND SORTING LOGIC ---
+
+        function applyFilters() {
+            const selectedThreats = Array.from(document.querySelectorAll('input[name="threat_filter"]:checked')).map(el => el.value);
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="category_filter"]:checked')).map(el => el.value);
+            const sortBy = document.getElementById('sort-by').value;
+            const searchTerm = document.getElementById('name-search').value.toLowerCase().trim();
+
+            // 1. Filter
+            let filtered = competitors.filter(comp => {
+                const threatMatch = selectedThreats.includes(getThreatLevel(comp.threat_score));
+                const categoryMatch = selectedCategories.includes(comp.category);
+                const searchMatch = comp.name.toLowerCase().includes(searchTerm);
+                return threatMatch && categoryMatch && searchMatch;
+            });
+
+            // 2. Sort
+            filtered.sort((a, b) => {
+                if (sortBy === 'threat_score_desc') return b.threat_score - a.threat_score;
+                if (sortBy === 'threat_score_asc') return a.threat_score - b.threat_score;
+                if (sortBy === 'name_asc') return a.name.localeCompare(b.name);
+                return 0;
+            });
+
+            renderCompetitors(filtered);
+            renderThreatChart(filtered); // Update chart with filtered data
+        }
+
+        // --- MARKET OVERVIEW RENDERING ---
+        function renderMarketOverview() {
+            const market = competitorsData.market_overview;
+            const container = document.getElementById('market-overview-cards');
+            const trendsList = document.getElementById('detailed-trends-list');
+
+            const cards = [
+                { title: "Total Market Size (2025)", value: market.total_market_size, icon: "area-chart" },
+                { title: "Growth Rate (YoY)", value: market.growth_rate, icon: "activity" },
+                { title: "Key Trend / Focus", value: market.key_trends[2], icon: "cpu" }
+            ];
+
+            container.innerHTML = cards.map(card => `
+                <div class="p-4 rounded-lg neon-border bg-gray-900/70 hover:bg-gray-800 transition duration-300">
+                    <div class="flex items-center mb-2">
+                        <span data-lucide="${card.icon}" class="w-5 h-5 mr-3 text-neon-secondary"></span>
+                        <h4 class="text-sm uppercase tracking-wider text-gray-400">${card.title}</h4>
+                    </div>
+                    <p class="text-2xl font-extrabold text-neon-primary">${card.value}</p>
+                </div>
+            `).join('');
+
+            trendsList.innerHTML = market.key_trends.map(t => `<li>${t}</li>`).join('');
+
+            lucide.createIcons();
+        }
+
+        // --- CHART.JS VISUALIZATION ---
+
+        function renderThreatChart(data) {
+            const ctx = document.getElementById('threat-chart').getContext('2d');
+            const counts = { High: 0, Medium: 0, Low: 0 };
+
+            data.forEach(comp => {
+                const level = getThreatLevel(comp.threat_score);
+                counts[level]++;
+            });
+
+            const chartData = {
+                labels: ['High Threat (>4.0)', 'Medium Threat (3.0-4.0)', 'Low Threat (<3.0)'],
+                datasets: [{
+                    data: [counts.High, counts.Medium, counts.Low],
+                    backgroundColor: ['#ef4444', '#f59e0b', '#10b981'], // Red, Yellow, Green
+                    borderColor: getComputedStyle(document.body).getPropertyValue('--color-bg-dark'),
+                    borderWidth: 2
+                }]
+            };
+
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: getComputedStyle(document.body).getPropertyValue('--current-text'),
+                            font: { family: 'Monospace' }
+                        }
+                    },
+                    title: { display: false }
+                }
+            };
+
+            if (chartInstance) {
+                chartInstance.data = chartData;
+                chartInstance.options = chartOptions;
+                chartInstance.update();
+            } else {
+                chartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: chartData,
+                    options: chartOptions
+                });
+            }
+        }
+
+        // --- DARK/LIGHT MODE TOGGLE ---
+
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark');
+            body.classList.toggle('light');
+
+            // Update chart colors to match the new theme
+            if (chartInstance) {
+                chartInstance.options.plugins.legend.labels.color = getComputedStyle(body).getPropertyValue('--current-text');
+                chartInstance.update();
+            }
+        }
+
+        // --- FOOTER JSON TOGGLE ---
+        function toggleJsonView() {
+            const viewer = document.getElementById('raw-json-viewer');
+            const content = document.getElementById('raw-json-content');
+            viewer.classList.toggle('active');
+
+            if (viewer.classList.contains('active') && content.innerHTML === '') {
+                // Populate JSON only once when opened
+                content.textContent = JSON.stringify(competitorsData, null, 2);
+            }
+        }
+
+        // --- INITIALIZATION AND EVENT LISTENERS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('raw-json-content').textContent = ''; // Ensure content is empty initially
+            renderMarketOverview();
+            applyFilters(); // Initial render and chart generation
+
+            // Sidebar Toggle for Mobile
+            const sidebar = document.getElementById('filter-sidebar');
+            document.getElementById('sidebar-toggle').addEventListener('click', () => {
+                sidebar.classList.toggle('hidden');
+                sidebar.classList.toggle('block');
+            });
+
+            // Name Search Listener (Apply filters on input)
+            document.getElementById('name-search').addEventListener('input', applyFilters);
+
+            // Dark/Light Mode Listener
+            document.getElementById('mode-toggle').addEventListener('click', toggleDarkMode);
+
+            // Filter Change Listener
+            document.querySelectorAll('input[name="threat_filter"], input[name="category_filter"]').forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+        });
+    </script>
+</body>
+</html>
